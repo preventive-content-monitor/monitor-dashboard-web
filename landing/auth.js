@@ -72,7 +72,7 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault(); limpar();
     var email = document.getElementById('email').value.trim();
-    var s = document.getElementById('senha').value, s2 = document.getElementById('senha2').value;
+    var s = document.getElementById('senha').value;
     var primeiro = null, ok = true;
     function falha(id, m) { erro(id, m); ok = false; if (!primeiro) primeiro = id; }
 
@@ -80,7 +80,6 @@
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) falha('email', 'Digite um e-mail válido, como nome@email.com.');
     if (!s) falha('senha', 'Informe sua senha.');
     else if (aba === 'cadastro' && (s.length < 8 || !/\d/.test(s) || !/[A-Za-z]/.test(s))) falha('senha', 'A senha precisa ter 8 ou mais caracteres, com letras e números.');
-    if (aba === 'cadastro' && s && s2 !== s) falha('senha2', 'As senhas não coincidem.');
     if (!ok) { document.getElementById(primeiro).focus(); return; }
 
     submit.disabled = true; submit.classList.add('loading');

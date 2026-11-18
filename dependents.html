@@ -328,6 +328,12 @@
       let currentCode = null;
       let editingId = null;
       let deletingId = null;
+      const PRESENTATION_ACCOUNT = "ruancrdz2004@gmail.com";
+      const PRESENTATION_DEPENDENT = {
+        nickname: "Monteiro",
+        sex: "MASCULINO",
+        birthDate: "2020-01-01",
+      };
 
       function escapeHtml(value) {
         return String(value ?? "")
@@ -574,15 +580,16 @@
         });
       }
 
-      function openAddModal(dep = null) {
+      function openAddModal(dep = null, defaults = null) {
         editingId = dep ? dep.id : null;
-        const [year, month, day] = (dep?.birthDate || "").split("-");
+        const initialData = dep || defaults || {};
+        const [year, month, day] = (initialData.birthDate || "").split("-");
         $("#addModalTitle").textContent = dep ? "Editar Dependente" : "Adicionar Dependente";
         $("#addSubmitBtn").innerHTML = dep
           ? '<span class="btn-icon">💾</span> Salvar'
           : '<span class="btn-icon">➕</span> Adicionar';
-        $("#nickname").value = dep?.nickname || "";
-        $("#sex").value = dep ? String(dep.sex || "").toUpperCase() : "";
+        $("#nickname").value = initialData.nickname || "";
+        $("#sex").value = String(initialData.sex || "").toUpperCase();
         $("#birthMonth").value = month || "";
         $("#birthYear").value = year || "";
         updateBirthDayOptions();
@@ -625,9 +632,19 @@
         try {
           dependentsList = await dependents.list();
           renderDependents();
+          openPresentationDependentIfNeeded();
         } catch (error) {
           showToast("Erro ao carregar dependentes: " + error.message, "error");
         }
+      }
+
+      function openPresentationDependentIfNeeded() {
+        const currentEmail = String(auth.getEmail() || "").trim().toLowerCase();
+        if (currentEmail !== PRESENTATION_ACCOUNT || dependentsList.length > 0) {
+          return;
+        }
+
+        openAddModal(null, PRESENTATION_DEPENDENT);
       }
 
       function renderDependents() {
