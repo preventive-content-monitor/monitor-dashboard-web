@@ -433,7 +433,6 @@
     var extension = F.extension.current();
 
     if (role === "same" && extension && !extension.scopedEnrollment) return updatePanel();
-    if (role === "same" && extension && extension.requiresAuthorization) return reauthorizePanel();
 
     if (data.devices.length > 0) {
       if (role && !st.doneAck) return donePanel(role);
